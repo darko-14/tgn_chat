@@ -1,16 +1,18 @@
 import React, { useEffect, useState, useMemo } from 'react'
 import { Button, TextField, Typography } from "@mui/material";
 import '../App.css';
+import beep from '../lib/beep1.mp3'; 
 
-
-function Main({ socket, room, user, onLogout, online }) {
+function Main({ socket, room, user, color, onLogout, online }) {
     const [value, setValue] = useState('')
-    const [messages, setMessages] = useState(localStorage.getItem('messages') ? JSON.parse(localStorage.getItem('messages')) : [])
+    const [messages, setMessages] = useState([])
+    const snd = new Audio(beep)
 
     useEffect(() => {
         socket.on('receive_message', (data) => {
             setMessages(messages => [data, ...messages])
-            console.log('msg recieved.,', data)
+            snd.play()
+            snd.currentTime = 0
         })
         return () => {
             socket.off("receive_message", {});
@@ -21,13 +23,13 @@ function Main({ socket, room, user, onLogout, online }) {
         if (e.keyCode === 13 && e.target.value.length > 0) {
             const new_message = {
                 id: new Date().getTime(), 
-                user: user, text: 
-                e.target.value, 
+                user: user, 
+                color: color, 
+                text: e.target.value, 
                 room: room,
                 timestamp: new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes(),
             }
             setMessages(messages => [new_message, ...messages])
-            localStorage.setItem('messages', JSON.stringify(messages))
             setValue('')
             var objDiv = document.getElementById("chatbox");
             objDiv.scroll({ bottom: objDiv.scrollHeight, behavior: 'smooth' });
@@ -87,8 +89,8 @@ function Main({ socket, room, user, onLogout, online }) {
                                     textAlign: 'start'
                                 }}>
                                 <Typography 
+                                sx={{color: v.user === user ? color : v.color}}
                                 variant='h6'
-                               color={v.user === user ? 'primary' : 'secondary'}
                                style={{marginRight: '5px'}}
                             >{v.user}:</Typography> 
                             <Typography 

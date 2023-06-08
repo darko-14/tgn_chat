@@ -19,12 +19,20 @@ const io = new Server(server, {
     }
 })
 
+let online_users = []
+
 
 io.on('connection',  (socket) => {
     socket.on("join_room", (data) => {
-        socket.join(data);
+        socket.join(data.room);
         io.to(socket.id).emit("hi");
-        console.log(`User with ID: ${socket.id} joined room: ${data}`);
+        online_users.push({
+            id: socket.id,
+            user: data.user
+        })
+        console.log(`User with ID: ${socket.id} joined room: ${data.room}`);
+        console.log('online_users', online_users)
+        socket.to(data.room).emit("return_online_users", online_users);
     });
 
     socket.on("send_message", (data) => {
@@ -33,6 +41,8 @@ io.on('connection',  (socket) => {
     });
 
     socket.on("disconnect", () => {
+        online_users = online_users.filter(v => v.id !== socket.id)
+        console.log('online_users', online_users)
         console.log("User Disconnected", socket.id);
     });
 })

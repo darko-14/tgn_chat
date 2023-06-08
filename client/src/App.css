@@ -5,8 +5,8 @@
   background-color: #0d1629;
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
   align-items: center;
+  gap: 20;
   justify-content: center;
   font-size: calc(10px + 2vmin);
   color: white;
@@ -48,11 +48,28 @@
 .chatbox {
   border: 1px solid white;
   height: 85%;
-  /* width: 90%; */
   margin-bottom: 10px;
   border-radius: 5px;
-  /* margin: auto; */
   overflow: auto;
   display: flex;
   flex-direction: column-reverse;
+}
+
+.input-color-container {
+  position: relative;
+  overflow: hidden;
+  width: 20px;
+  height: 20px;
+  border: solid 2px #ddd;
+  border-radius: 40px;
+  margin-right: 20px;
+}
+
+.input-color {
+  position: absolute;
+  right: -8px;
+  top: -8px;
+  width: 56px;
+  height: 56px;
+  border: none;
 }
