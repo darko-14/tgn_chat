@@ -15,7 +15,6 @@ function App() {
   
   useEffect(() => {
     if (localStorage.getItem('user')) {
-      socket.emit("join_room", room);
       setUser(localStorage.getItem('user'))
       setAuthenticated(true)
     }
@@ -25,6 +24,7 @@ function App() {
   const onLogin = (user) => {
     setUser(user)
     localStorage.setItem('user', user)
+    socket.emit("join_room", room);
     setAuthenticated(true)
   }
 

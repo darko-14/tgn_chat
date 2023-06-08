@@ -5,7 +5,7 @@ import '../App.css';
 
 function Main({ socket, room, user, onLogout, online }) {
     const [value, setValue] = useState('')
-    const [messages, setMessages] = useState([])
+    const [messages, setMessages] = useState(localStorage.getItem('messages') ? JSON.parse(localStorage.getItem('messages')) : [])
 
     useEffect(() => {
         socket.on('receive_message', (data) => {
@@ -27,6 +27,7 @@ function Main({ socket, room, user, onLogout, online }) {
                 timestamp: new Date(Date.now()).getHours() + ":" + new Date(Date.now()).getMinutes(),
             }
             setMessages(messages => [new_message, ...messages])
+            localStorage.setItem('messages', JSON.stringify(messages))
             setValue('')
             var objDiv = document.getElementById("chatbox");
             objDiv.scroll({ bottom: objDiv.scrollHeight, behavior: 'smooth' });
